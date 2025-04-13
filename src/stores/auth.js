@@ -62,6 +62,9 @@ export const useAuthStore = defineStore('authentication', {
         this.setIsAuthenticated(true);
 
         console.log("Response:", response);
+        console.log("Access Token:", access_token);
+        console.log("Refresh Token:", refresh_token);
+        console.log("Expires In:", expires_in);
       } catch (error) {
         console.error('Error getting access token:', error)
       }
@@ -84,17 +87,8 @@ export const useAuthStore = defineStore('authentication', {
     },
 
     async logout() {
-      let script = document.createElement("script");
-
-      script.src = "https://www.spotify.com/logout/";
-      document.getElementById("app").appendChild(script);
-
-      window.localStorage.clear();
-      window.sessionStorage.clear();
-
-      setTimeout(() => {
-        location.reload();
-      }, 1000);
+      await api_auth.logout();
+      this.store.$reset();
     }
   }
 })

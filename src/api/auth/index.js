@@ -1,7 +1,7 @@
 import generators from "./generators.js";
-// import request from "./request";
+import request from "./request";
 
-const redirect_uri = "http://127.0.0.1:5174/callback";
+const redirect_uri = "http://127.0.0.1:5173/callback";
 
 export default {
     redirectToAuthCodeFlow: async function (clientId) {
@@ -25,35 +25,40 @@ export default {
     requestAccessToken: async function (clientId, code) {
         const verifier = localStorage.getItem("code_verifier");
 
-
-        const params = new URLSearchParams();
-        params.append("client_id", clientId);
-        params.append("grant_type", "authorization_code");
-        params.append("code", code);
-        params.append("redirect_uri", redirect_uri);
-        params.append("code_verifier", verifier);
-
-        const response = await fetch("https://accounts.spotify.com/api/token", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: params
+        const response = await request.post("token", {
+            client_id: clientId,
+            grant_type: "authorization_code",
+            code: code,
+            redirect_uri: redirect_uri,
+            code_verifier: verifier
+        }, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
         });
-        return await response.json();
+        return response.data;
     },
 
     refreshToken: async function (clientId, refreshToken) {
-        const response = await fetch("https://accounts.spotify.com/api/token", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                client_id: clientId,
-                grant_type: 'refresh_token',
-                refresh_token: refreshToken
-            }),
+        const response = await request.post("token", {
+            client_id: clientId,
+            grant_type: "refresh_token",
+            refresh_token: refreshToken
+        }, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
         });
+        return response.data;
+    },
 
-        return await response.json();
+    logout: async function () {
+        let script = document.createElement("script");
+
+        script.src = "https://www.spotify.com/logout/";
+        document.getElementById("app").appendChild(script);
+
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     }
 };
