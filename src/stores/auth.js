@@ -3,42 +3,32 @@ import { defineStore } from 'pinia'
 
 const clientId = "0675bf433fb946a9831b636e98f4fd81";
 
-export const useAuthStore = defineStore('authentication', {
+export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: false,
     accessToken: "",
     refreshToken: "",
     codeToken: "",
     expiresIn: "",
-    verifier: "",
   }),
 
   getters: {
-    getIsAuthenticated: (state) => state.isAuthenticated,
-    getAccessToken: (state) => state.accessToken,
-    getRefreshToken: (state) => state.refreshToken,
-    getCodeToken: (state) => state.codeToken,
-    getVerifier: (state) => state.verifier,
-    getExpiresIn: (state) => state.expiresIn
   },
 
   actions: {
-    async setIsAuthenticated(isAuthenticated) {
+    setIsAuthenticated(isAuthenticated) {
       this.isAuthenticated = isAuthenticated
     },
-    async setAccessToken(accessToken) {
+    setAccessToken(accessToken) {
       this.accessToken = accessToken
     },
-    async setRefreshToken(refreshToken) {
+    setRefreshToken(refreshToken) {
       this.refreshToken = refreshToken
     },
-    async setCodeToken(codeToken) {
+    setCodeToken(codeToken) {
       this.codeToken = codeToken
     },
-    async setVerifier(verifier) {
-      this.verifier = verifier
-    },
-    async setExpiresIn(expiresIn) {
+    setExpiresIn(expiresIn) {
       this.expiresIn = expiresIn
     },
 
@@ -80,6 +70,8 @@ export const useAuthStore = defineStore('authentication', {
           this.setRefreshToken(refresh_token);
           this.setExpiresIn(expires_in);
           this.setIsAuthenticated(true);
+
+          console.log("Refreshed Access Token:", response);
         }
       } catch (error) {
         console.error('Error refreshing access token:', error)

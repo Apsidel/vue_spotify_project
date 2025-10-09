@@ -16,7 +16,7 @@ const router = useRouter()
 onMounted(async () => {
   await authStore.requestAccessToken(props.code)
 
-  if (authStore.getIsAuthenticated) {
+  if (authStore.isAuthenticated) {
     router.push({ name: 'profile' })
   }
 })

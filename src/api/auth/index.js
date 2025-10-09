@@ -15,7 +15,7 @@ export default {
         params.append("client_id", clientId);
         params.append("response_type", 'code');
         params.append("redirect_uri", redirect_uri);
-        params.append("scope", "user-read-private user-read-email");
+        params.append("scope", "user-read-private user-top-read user-read-email");
         params.append("code_challenge_method", 'S256');
         params.append("code_challenge", challenge);
 
