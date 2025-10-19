@@ -1,52 +1,32 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useUserStore } from '@/stores/user'
+import TabContainer from '@/components/TabContainer.vue'
+import TabItem from '@/components/TabItem.vue'
+import UserProfileDisplay from '@/components/UserProfileDisplay.vue'
+import TopTracksDisplay from '@/components/TopTracksDisplay.vue'
 
 const authStore = useAuthStore()
-const userStore = useUserStore()
 
 onMounted(async () => {
-  if (authStore.isAuthenticated) {
-    await userStore.fetchProfile(authStore.accessToken)
-    await userStore.fetchTopTracks(authStore.accessToken)
-    await userStore.fetchTopArtists(authStore.accessToken)
-  } else {
+  if (!authStore.isAuthenticated) {
     authStore.login()
   }
 })
 </script>
 <template>
   <main>
-    <h1>{{ userStore.displayName }}</h1>
-    <img
-      v-if="userStore.profileImage"
-      :src="userStore.profileImage"
-      width="250px"
-      alt="User Avatar"
-    />
-    <h2>Top Tracks</h2>
-    <ul>
-      <li v-for="(track, index) in userStore.topTracks" :key="track.id">
-        {{ index + 1 }}
-        <img :src="track.album.images[0].url" width="100px" alt="Album Cover" />
-        {{ track.name }} by
-        {{
-          track.artists
-            .map((artist) => artist.name)
-            .join(', ')
-            .toString()
-        }}
-      </li>
-    </ul>
-
-    <h2>Top Artists</h2>
-    <ul>
-      <li v-for="(artist, index) in userStore.topArtists" :key="artist.id">
-        {{ index + 1 }}
-        <img :src="artist.images[0].url" width="100px" alt="Artist Avatar" />
-        {{ artist.name }}
-      </li>
-    </ul>
+    <UserProfileDisplay />
+    <TabContainer>
+      <TabItem title="Short Term">
+        <TopTracksDisplay time_range="short_term" />
+      </TabItem>
+      <TabItem title="Medium Term">
+        <TopTracksDisplay time_range="medium_term" />
+      </TabItem>
+      <TabItem title="Long Term">
+        <TopTracksDisplay time_range="long_term" />
+      </TabItem>
+    </TabContainer>
   </main>
 </template>
