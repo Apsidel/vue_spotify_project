@@ -37,4 +37,30 @@ export default {
         })
         return response.data;
     },
+
+    createPlaylist: async function (token, userId, name = "My Top Tracks Playlist", description = "", isPublic = false) {
+        const response = await request.post(`users/${userId}/playlists`, {
+            name: name,
+            description: description,
+            public: isPublic
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+        return response.data;
+    },
+
+    addTracksToPlaylist: async function (token, playlistId, trackUris) {
+        const response = await request.post(`playlists/${playlistId}/tracks`, {
+            uris: trackUris
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+        return response.data;
+    }
 }

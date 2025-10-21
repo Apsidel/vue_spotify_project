@@ -2,6 +2,7 @@ import generators from "./generators.js";
 import request from "./request";
 
 const redirect_uri = "http://127.0.0.1:5173/callback";
+const scope = "user-read-private user-top-read user-read-email playlist-modify-public playlist-modify-private";
 
 export default {
     redirectToAuthCodeFlow: async function (clientId) {
@@ -15,7 +16,7 @@ export default {
         params.append("client_id", clientId);
         params.append("response_type", 'code');
         params.append("redirect_uri", redirect_uri);
-        params.append("scope", "user-read-private user-top-read user-read-email");
+        params.append("scope", scope);
         params.append("code_challenge_method", 'S256');
         params.append("code_challenge", challenge);
 

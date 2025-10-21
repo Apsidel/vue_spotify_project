@@ -19,13 +19,13 @@ onMounted(async () => {
     <UserProfileDisplay />
     <TabContainer>
       <TabItem title="Short Term">
-        <TopTracksDisplay time_range="short_term" />
+        <TopTracksDisplay title="Short Term" time_range="short_term" />
       </TabItem>
       <TabItem title="Medium Term">
-        <TopTracksDisplay time_range="medium_term" />
+        <TopTracksDisplay title="Medium Term" time_range="medium_term" />
       </TabItem>
       <TabItem title="Long Term">
-        <TopTracksDisplay time_range="long_term" />
+        <TopTracksDisplay title="Long Term" time_range="long_term" />
       </TabItem>
     </TabContainer>
   </main>

@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', {
         profile: null,
         profileImage: '',
         displayName: '',
+        userId: '',
 
         topTracksShortTerm: [],
         topTracksMediumTerm: [],
@@ -54,6 +55,7 @@ export const useUserStore = defineStore('user', {
 
                 this.profileImage = response.images[0].url
                 this.displayName = response.display_name
+                this.userId = response.id
                 this.profile = response
 
                 console.log("User Profile:", this.profile)
@@ -63,22 +65,49 @@ export const useUserStore = defineStore('user', {
         },
 
         async fetchTopTracks(token, time_range = "short_term") {
+            var topTracks = []
             try {
                 const response = await api_user.fetchTopTracks(token, time_range)
                 this.setTopTracksByTimeRange(time_range, response.items)
+                topTracks = response.items
                 console.log("Top Tracks:", response.items)
             } catch (error) {
                 console.error('Error fetching top tracks:', error)
             }
+            return topTracks
         },
 
         async fetchTopArtists(token, time_range = "short_term") {
+            var topArtists = []
             try {
                 const response = await api_user.fetchTopArtists(token, time_range)
                 this.setTopArtistsByTimeRange(time_range, response.items)
+                topArtists = response.items
                 console.log("Top Artists:", response.items)
             } catch (error) {
                 console.error('Error fetching top tracks:', error)
+            }
+            return topArtists
+        },
+
+        async createPlaylist(token, name, description, isPublic) {
+            var playlist_id = ''
+            try {
+                const response = await api_user.createPlaylist(token, this.userId, name, description, isPublic)
+                playlist_id = response.id
+                console.log("Created Playlist:", response)
+            } catch (error) {
+                console.error('Error creating playlist:', error)
+            }
+            return playlist_id
+        },
+
+        async addTracksToPlaylist(token, playlistId, trackUris) {
+            try {
+                const response = await api_user.addTracksToPlaylist(token, playlistId, trackUris)
+                console.log("Added Tracks to Playlist:", response)
+            } catch (error) {
+                console.error('Error adding tracks to playlist:', error)
             }
         },
 
